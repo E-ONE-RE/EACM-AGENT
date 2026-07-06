@@ -1,0 +1,184 @@
+ @Metadata.layer: #CUSTOMER
+  @UI.headerInfo: {
+    typeName: 'Agent',
+    typeNamePlural: 'Agents',
+    title: { type: #STANDARD, value: 'AgentName' },
+    description: { type: #STANDARD, value: 'AgentID' }
+  }
+  @UI.presentationVariant: [{
+    sortOrder: [{ by: 'AgentID', direction: #ASC }],
+    visualizations: [{type: #AS_LINEITEM}]
+  }]
+  @UI.selectionVariant: [{
+    qualifier: 'ActiveAgents',
+    text: 'Active Agents',
+    filter: 'Status EQ \'A\''
+  }, {
+    qualifier: 'SuspendedAgents',
+    text: 'Suspended Agents',
+    filter: 'Status EQ \'S\''
+  }]
+  annotate entity /EACM/C_AGENT with
+  {
+    @UI.facet: [
+      { id: 'GeneralInfo', label: 'General Information', type: #COLLECTION, position: 10 },
+      { id: 'BasicData', label: 'Basic Data', type: #FIELDGROUP_REFERENCE,
+        targetQualifier: 'BasicData', parentId: 'GeneralInfo', position: 10 },
+      { id: 'Names', label: 'Names', type: #FIELDGROUP_REFERENCE,
+        targetQualifier: 'Names', parentId: 'GeneralInfo', position: 20 },
+      { id: 'BusinessData', label: 'Business Data', type: #COLLECTION, position: 20 },
+      { id: 'BusinessFields', label: 'Business Details', type: #FIELDGROUP_REFERENCE,
+        targetQualifier: 'Business', parentId: 'BusinessData', position: 10 },
+      { id: 'SalesFields', label: 'Sales Data', type: #FIELDGROUP_REFERENCE,
+        targetQualifier: 'Sales', parentId: 'BusinessData', position: 20 },
+      { id: 'Regulatory', label: 'Regulatory (ENASARCO/FIRR)', type: #COLLECTION, position: 30 },
+      { id: 'RegulatoryFields', label: 'Regulatory Flags', type: #FIELDGROUP_REFERENCE,
+        targetQualifier: 'Regulatory', parentId: 'Regulatory', position: 10 },
+      { id: 'Validity', label: 'Validity', type: #COLLECTION, position: 40 },
+      { id: 'ValidityFields', label: 'Validity Period', type: #FIELDGROUP_REFERENCE,
+        targetQualifier: 'Validity', parentId: 'Validity', position: 10 },
+      { id: 'Shareholders', purpose: #STANDARD, type: #LINEITEM_REFERENCE,
+        label: 'Shareholders', position: 50, targetElement: '_Shareholder' },
+      { id: 'AdminData', label: 'Administrative Data', type: #COLLECTION, position: 60 },
+      { id: 'AdminFields', label: 'Change Information', type: #FIELDGROUP_REFERENCE,
+        targetQualifier: 'Admin', parentId: 'AdminData', position: 10 }
+    ]
+
+    @UI: { lineItem: [{ position: 10, importance: #HIGH }],
+           selectionField: [{ position: 10 }],
+           fieldGroup: [{ qualifier: 'BasicData', position: 10 }] }
+    AgentID;
+
+    @UI: { lineItem: [{ position: 20, importance: #HIGH }],
+           selectionField: [{ position: 20 }],
+           fieldGroup: [{ qualifier: 'BasicData', position: 20 }] }
+    AgentName;
+
+    @UI: { lineItem: [{ position: 30, importance: #HIGH }],
+           selectionField: [{ position: 30 }],
+           fieldGroup: [{ qualifier: 'BasicData', position: 30 }] }
+    @Consumption.valueHelpDefinition: [{ entity: { name: '/EACM/I_COMPANY', element: 'SapCompanyCode' } }]
+    CompanyCode;
+
+    @UI: { lineItem: [{ position: 40, importance: #HIGH }],
+           selectionField: [{ position: 40 }],
+           fieldGroup: [{ qualifier: 'BasicData', position: 40 }] }
+    @Consumption.valueHelpDefinition: [{ entity: { name: '/EACM/I_AGENT_TYPE_VH', element: 'AgentTypeID' } }]
+    AgentTypeCode;
+
+    @UI: { lineItem: [{ position: 45, importance: #MEDIUM }] }
+    AgentTypeText;
+
+    @UI.fieldGroup: [{ qualifier: 'Names', position: 10 }]
+    FirstName;
+
+    @UI.fieldGroup: [{ qualifier: 'Names', position: 20 }]
+    LastName;
+
+    @UI.fieldGroup: [{ qualifier: 'BasicData', position: 50 }]
+    CompanyType;
+
+    @UI.fieldGroup: [{ qualifier: 'BasicData', position: 60 }]
+    CompanyName;
+
+    @UI: { lineItem: [{ position: 50, importance: #MEDIUM }],
+           fieldGroup: [{ qualifier: 'Business', position: 10 }] }
+    VendorNumber;
+
+    @UI.fieldGroup: [{ qualifier: 'Business', position: 20 }]
+    CustomerNumber;
+
+    @UI: { lineItem: [{ position: 60, importance: #MEDIUM }],
+           fieldGroup: [{ qualifier: 'Business', position: 30 }] }
+    VatNumber;
+
+    @UI.fieldGroup: [{ qualifier: 'Business', position: 40 }]
+    TaxNumber;
+
+    @UI.fieldGroup: [{ qualifier: 'Business', position: 50 }]
+    TaxStatus;
+
+    @UI.fieldGroup: [{ qualifier: 'Business', position: 60 }]
+    Currency;
+
+    @UI.fieldGroup: [{ qualifier: 'Business', position: 70 }]
+    Email;
+
+    @UI: { fieldGroup: [{ qualifier: 'Sales', position: 10 }],
+           selectionField: [{ position: 50 }] }
+    SalesOrg;
+
+    @UI.fieldGroup: [{ qualifier: 'Sales', position: 20 }]
+    SalesOffice;
+
+    @UI.fieldGroup: [{ qualifier: 'Sales', position: 30 }]
+    SalesGroup;
+
+    @UI.fieldGroup: [{ qualifier: 'Sales', position: 40 }]
+    PrefixCode;
+
+    @UI.fieldGroup: [{ qualifier: 'Sales', position: 50 }]
+    DescriptionCode;
+
+    @UI.fieldGroup: [{ qualifier: 'Sales', position: 60 }]
+    DivisionCode;
+
+    @UI.fieldGroup: [{ qualifier: 'Sales', position: 70 }]
+    Plant;
+
+    @UI.fieldGroup: [{ qualifier: 'Regulatory', position: 10 }]
+    EnasarcoExempt;
+
+    @UI.fieldGroup: [{ qualifier: 'Regulatory', position: 20 }]
+    EnasarcoSignature;
+
+    @UI.fieldGroup: [{ qualifier: 'Regulatory', position: 30 }]
+    FirrSignature;
+
+    @UI.fieldGroup: [{ qualifier: 'Regulatory', position: 40 }]
+    SubAgent;
+
+    @UI.fieldGroup: [{ qualifier: 'Regulatory', position: 50 }]
+    MonthlyFlag;
+
+    @UI: { lineItem: [{ position: 70, importance: #MEDIUM }],
+           fieldGroup: [{ qualifier: 'Validity', position: 10 }] }
+    ValidFrom;
+
+    @UI.fieldGroup: [{ qualifier: 'Validity', position: 20 }]
+    ValidTo;
+
+    @UI: { lineItem: [
+             { position: 80, importance: #HIGH, criticality: 'StatusCriticality' },
+             { type: #FOR_ACTION, dataAction: 'Suspend', label: 'Suspend', position: 200 },
+             { type: #FOR_ACTION, dataAction: 'Reactivate', label: 'Reactivate', position: 210 },
+             { type: #FOR_ACTION, dataAction: 'Deactivate', label: 'Deactivate', position: 220 }
+           ],
+           identification: [
+             { type: #FOR_ACTION, dataAction: 'Suspend', label: 'Suspend', position: 200 },
+             { type: #FOR_ACTION, dataAction: 'Reactivate', label: 'Reactivate', position: 210 },
+             { type: #FOR_ACTION, dataAction: 'Deactivate', label: 'Deactivate', position: 220 }
+           ],
+           selectionField: [{ position: 60 }],
+           fieldGroup: [{ qualifier: 'Validity', position: 30 }] }
+    Status;
+
+    @UI.hidden: true
+    StatusCriticality;
+
+    @UI.hidden: true
+    LocalLastChangedAt;
+
+    @UI.fieldGroup: [{ qualifier: 'Admin', position: 10 }]
+    CreatedBy;
+
+    @UI.fieldGroup: [{ qualifier: 'Admin', position: 20 }]
+    CreatedAt;
+
+    @UI.fieldGroup: [{ qualifier: 'Admin', position: 30 }]
+    ChangedBy;
+
+    @UI.fieldGroup: [{ qualifier: 'Admin', position: 40 }]
+    ChangedAt;
+  }
+

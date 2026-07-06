@@ -1,0 +1,4 @@
+@EndUserText.label: 'Maint. C_AGT_SHAREHOLD'
+define service /EACM/M_AGT_SHAREHOLD_SD {
+  expose /EACM/C_AGT_SHAREHOLD as AGT_SHAREHOLD;
+}

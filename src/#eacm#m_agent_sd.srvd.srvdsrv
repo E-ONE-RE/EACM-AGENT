@@ -1,0 +1,4 @@
+@EndUserText.label: 'Maint. C_AGENT'
+define service /EACM/M_AGENT_SD {
+  expose /EACM/C_AGENT as AGENT;
+}

@@ -1,0 +1,50 @@
+ @Metadata.layer: #CUSTOMER
+  @UI.headerInfo: {
+    typeName: 'Shareholder',
+    typeNamePlural: 'Shareholders',
+    title: { type: #STANDARD, value: 'PartnerName' },
+    description: { type: #STANDARD, value: 'ShareholderID' }
+  }
+  annotate entity /EACM/C_AGT_SHAREHOLD with
+  {
+    @UI.facet: [
+      { id: 'ShareholderDetail', purpose: #STANDARD,
+        type: #IDENTIFICATION_REFERENCE,
+        label: 'Shareholder Details', position: 10 }
+    ]
+
+    @UI: { lineItem: [{ position: 10 }],
+           identification: [{ position: 10 }] }
+    ShareholderID;
+
+    @UI: { lineItem: [{ position: 20 }],
+           identification: [{ position: 20 }] }
+    CompanyCode;
+
+    @UI: { lineItem: [{ position: 30 }],
+           identification: [{ position: 30 }] }
+    MandateType;
+
+    @UI: { lineItem: [{ position: 40 }],
+           identification: [{ position: 40 }] }
+    PartnerName;
+
+    @UI: { lineItem: [{ position: 50 }],
+           identification: [{ position: 50 }] }
+    ParticipationPct;
+
+    @UI: { lineItem: [{ position: 60 }],
+           identification: [{ position: 60 }] }
+    ValidFrom;
+
+    @UI: { lineItem: [{ position: 70 }],
+           identification: [{ position: 70 }] }
+    ValidTo;
+
+    @UI: { lineItem: [{ position: 80, criticality: 'StatusCriticality' }],
+           identification: [{ position: 80, criticality: 'StatusCriticality' }] }
+    Status;
+
+    @UI.hidden: true
+    StatusCriticality;
+  }

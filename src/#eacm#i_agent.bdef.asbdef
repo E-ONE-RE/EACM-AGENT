@@ -1,0 +1,185 @@
+managed implementation in class /EACM/BP_I_AGENT unique;
+strict ( 2 );
+with draft;
+
+define behavior for /EACM/I_AGENT alias Agent
+persistent table /eacm/agent
+draft table /eacm/agent_d
+etag master LocalLastChangedAt
+lock master total etag ChangedAt
+authorization master ( global )
+{
+  field ( readonly )
+    AgentID,
+    CreatedBy,
+    CreatedAt,
+    ChangedBy,
+    ChangedAt,
+    LocalLastChangedAt,
+    StatusCriticality,
+    AgentTypeText;
+
+  field ( mandatory )
+    CompanyCode,
+    AgentName,
+    AgentTypeCode,
+    Status;
+
+  mapping for /eacm/agent
+  {
+    AgentID            = agent_id;
+    CompanyCode        = company_code;
+    AgentName          = agent_name;
+    FirstName          = first_name;
+    LastName           = last_name;
+    AgentTypeCode          = agent_type;
+    CompanyType        = company_type;
+    CompanyName        = company_name;
+    VendorNumber       = vendor_number;
+    CustomerNumber     = customer_number;
+    VatNumber          = vat_number;
+    TaxNumber          = tax_number;
+    TaxStatus          = tax_status;
+    Currency           = currency;
+    SalesOrg           = sales_org;
+    SalesOffice        = sales_office;
+    SalesGroup         = sales_group;
+    Email              = email;
+    EnasarcoExempt     = enasarco_exempt;
+    SubAgent           = sub_agent;
+    FirrSignature      = firr_signature;
+    EnasarcoSignature  = enasarco_signature;
+    MonthlyFlag        = monthly_flag;
+    PrefixCode         = prefix_code;
+    DescriptionCode    = description_code;
+    DivisionCode       = division_code;
+    Plant              = plant;
+    ValidFrom          = valid_from;
+    ValidTo            = valid_to;
+    Status             = status;
+    CreatedBy          = created_by;
+    CreatedAt          = created_at;
+    ChangedBy          = changed_by;
+    ChangedAt          = changed_at;
+    LocalLastChangedAt = local_last_changed_at;
+  }
+
+  create;
+  update;
+  delete;
+
+  /* Custom Actions */
+  action Suspend result [1] $self;
+  action Reactivate result [1] $self;
+  /* Issue #9: Terminal deactivation action (A or S -> I) */
+  action Deactivate result [1] $self;
+
+  /* Determinations */
+  determination SetAgentID on save { create; }
+  determination DeriveDefaults on modify { create; }
+  /* Issue #7: Warning when EnasarcoExempt is set for non-SUBT agent types */
+  validation ValidateEnasarcoExempt on save { create; update;
+    field EnasarcoExempt, AgentTypeCode; }
+  /* Issue #6: Validate ParentAgentID requirement for sub-agents */
+  validation ValidateParentAgent on save { create; update;
+    field SubAgent; }
+
+  /* Validations */
+  validation ValidateCompanyCode on save { create; update;
+    field CompanyCode; }
+  validation ValidateAgentType on save { create; update;
+    field AgentTypeCode; }
+  validation ValidateStatus on save { create; update;
+    field Status; }
+  validation ValidateVendorNumber on save { create; update;
+    field VendorNumber; }
+  validation ValidateDates on save { create; update;
+    field ValidFrom, ValidTo; }
+  validation ValidateVatNumber on save { create; update;
+    field VatNumber; }
+  validation ValidateEmail on save { create; update;
+    field Email; }
+  /* Issue #3: Validate currency against SAP standard currency table (I_Currency) */
+  validation ValidateCurrency on save { create; update;
+    field Currency; }
+
+
+
+  /* Draft Actions */
+  draft action Edit;
+  draft action Activate optimized;
+  draft action Discard;
+  draft action Resume;
+  draft determine action Prepare
+  {
+    validation ValidateCompanyCode;
+    validation ValidateAgentType;
+    validation ValidateStatus;
+    validation ValidateVendorNumber;
+    validation ValidateDates;
+    validation ValidateVatNumber;
+    validation ValidateEmail;
+    validation ValidateCurrency;
+    validation ValidateEnasarcoExempt;
+    validation ValidateParentAgent;
+  }
+
+  /* Composition */
+  association _Shareholder { create; with draft; }
+}
+
+define behavior for /EACM/I_AGT_SHAREHOLD alias Shareholder
+persistent table /eacm/agt_shrhld
+draft table /eacm/agt_shrl_d
+etag master ChangedAt
+lock dependent by _Agent
+authorization dependent by _Agent
+{
+  field ( readonly )
+    AgentID,
+    ShareholderID,
+    CreatedBy,
+    CreatedAt,
+    ChangedBy,
+    ChangedAt,
+    StatusCriticality;
+
+  field ( mandatory )
+    PartnerName,
+    ParticipationPct;
+
+  mapping for /eacm/agt_shrhld
+  {
+    AgentID          = agent_id;
+    ShareholderID    = shareholder_id;
+    CompanyCode      = company_code;
+    MandateType      = mandate_type;
+    PartnerName      = partner_name;
+    ParticipationPct = participation_pct;
+    ValidFrom        = valid_from;
+    ValidTo          = valid_to;
+    Status           = status;
+    CreatedBy        = created_by;
+    CreatedAt        = created_at;
+    ChangedBy        = changed_by;
+    ChangedAt        = changed_at;
+  }
+
+  update;
+  delete;
+
+  determination SetShareholderID on save { create; }
+  determination DeriveShareholderDefaults on modify { create; }
+  /* Issue #11: Inherit CompanyCode from parent Agent on creation */
+  determination InheritCompanyCode on modify { create; }
+
+  validation ValidateParticipation on save { create; update;
+    field ParticipationPct; }
+  validation ValidateShareholderDates on save { create; update;
+    field ValidFrom, ValidTo; }
+  /* Issue #1: Warn when total shareholder participation != 100% */
+  validation ValidateParticipationTotal on save { create; update;
+    field ParticipationPct; }
+
+  association _Agent { with draft; }
+}

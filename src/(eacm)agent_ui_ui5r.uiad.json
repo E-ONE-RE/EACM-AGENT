@@ -1,0 +1,35 @@
+{
+  "formatVersion": "2",
+  "header": {
+    "description": "eACM - Create, edit and manage agent master data",
+    "originalLanguage": "en",
+    "abapLanguageVersion": "cloudDevelopment"
+  },
+  "generalInformation": {
+    "appType": "ui5",
+    "catalogId": "SAP_TC_UI5_REPO_UIAD",
+    "targetMappingTitle": "Manage Agents"
+  },
+  "ui5AppDetails": {
+    "appId": "eacm.agent.manage"
+  },
+  "navigation": {
+    "targetMappingId": "UI5R_F664D3B6AF9A3624052FE313DDBAA113773703AD_TM",
+    "semanticObject": "EACMAgent",
+    "action": "manage",
+    "desktop": true,
+    "tablet": true,
+    "phone": true
+  },
+  "tiles": [
+    {
+      "id": "UI5R_F664D3B6AF9A3624052FE313DDBAA113773703AD_AL",
+      "tileType": "static",
+      "isDefault": true,
+      "standard": {
+        "title": "Manage Agents",
+        "icon": "sap-icon://person-placeholder"
+      }
+    }
+  ]
+}

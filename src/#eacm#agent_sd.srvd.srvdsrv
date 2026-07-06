@@ -1,0 +1,7 @@
+@EndUserText.label: 'eACM - Agent Service'
+define service /EACM/AGENT_SD {
+  expose /EACM/C_AGENT           as Agent;
+  expose /EACM/C_AGT_SHAREHOLD   as AgentShareholder;
+  expose /EACM/I_COMPANY         as Company;
+  expose /EACM/I_AGENT_TYPE_VH   as AgentTypeVH;
+}

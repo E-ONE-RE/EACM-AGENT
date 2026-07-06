@@ -1,0 +1,13 @@
+CLASS /eacm/bp_i_agent DEFINITION
+  PUBLIC
+  ABSTRACT
+  FINAL
+  FOR BEHAVIOR OF /EACM/I_AGENT.
+protected section.
+private section.
+ENDCLASS.
+
+
+
+CLASS /EACM/BP_I_AGENT IMPLEMENTATION.
+ENDCLASS.
